@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-serif: 'Cormorant Garamond', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-script: 'Petit Formal Script', cursive;
+    --color-misty-rose: #FFE4E1;
+    --color-old-rose: #BF7E81;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #FAF8F5;
+    color: #1F1B1D;
+  }
+
+  ::selection {
+    background-color: #FFE4E1;
+    color: #5C1D30;
+  }
+}
+
+.font-serif {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+.font-sans {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.font-script {
+  font-family: 'Petit Formal Script', cursive;
+}
+
+.bg-misty-rose {
+  background-color: #FFE4E1;
+}
+
+.text-old-rose {
+  color: #BF7E81;
+}
+
+.border-old-rose {
+  border-color: #BF7E81;
+}
+
+/* Custom drop-cap for editorial elegance */
+.editorial-drop-cap::first-letter {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 3.5rem;
+  line-height: 0.85;
+  font-weight: 600;
+  float: left;
+  margin-right: 0.75rem;
+  margin-top: 0.2rem;
+  color: #943855;
+}
+
+/* Subtle beauty paper texture / border styling */
+.border-subtle {
+  border-color: rgba(31, 27, 29, 0.08);
+}
+
+.bg-paper {
+  background-color: #FAF8F5;
+}
+
+.bg-paper-warm {
+  background-color: #F5EFEB;
+}
+
+.bg-blush-soft {
+  background-color: #FDF5F6;
+}
+
+.bg-lavender-soft {
+  background-color: #F6F3FA;
+}

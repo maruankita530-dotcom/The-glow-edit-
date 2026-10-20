@@ -1,0 +1,6 @@
+{
+  "name": "The Glow Edit - Modern Skincare & Beauty Journal",
+  "description": "A clean, modern beauty and skincare blog for Gen Z and young adults. Science-backed routines, ingredient guides, acne care, and affordable student skincare.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
