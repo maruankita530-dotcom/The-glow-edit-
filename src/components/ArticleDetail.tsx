@@ -196,7 +196,7 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
           
           <div className="flex items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
             <a
-              href="#home"
+              href="/"
               onClick={(e) => {
                 e.preventDefault();
                 onBack();
@@ -208,13 +208,13 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
             </a>
             <span aria-hidden="true" className="text-neutral-300">/</span>
             <a
-              href={`#category/${encodeURIComponent(article.category)}`}
+              href={`/category/${encodeURIComponent(article.category)}`}
               onClick={(e) => {
                 e.preventDefault();
                 if (onNavigateCategory) {
                   onNavigateCategory(article.category);
                 } else {
-                  window.location.hash = `category/${encodeURIComponent(article.category)}`;
+                  window.location.href = `/category/${encodeURIComponent(article.category)}`;
                 }
               }}
               className="font-medium text-[#943855] hover:underline transition-all cursor-pointer"
@@ -268,11 +268,11 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
         {/* Zero-Pill Unboxed Metadata */}
         <div className="inline-flex items-center gap-2 text-xs text-neutral-500 uppercase tracking-widest font-medium mb-4">
           <a
-            href={`#category/${encodeURIComponent(article.category)}`}
+            href={`/category/${encodeURIComponent(article.category)}`}
             onClick={(e) => {
               e.preventDefault();
               if (onNavigateCategory) onNavigateCategory(article.category);
-              else window.location.hash = `category/${encodeURIComponent(article.category)}`;
+              else window.location.href = `/category/${encodeURIComponent(article.category)}`;
             }}
             className="text-[#943855] hover:underline"
           >

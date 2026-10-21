@@ -101,7 +101,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Saved Bookmarks */}
           <a
-            href="#saved"
+            href="/saved"
             onClick={(e) => {
               e.preventDefault();
               onNavigate('saved');

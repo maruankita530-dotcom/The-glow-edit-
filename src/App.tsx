@@ -19,10 +19,94 @@ import { NotFoundPage } from './components/NotFoundPage';
 import { Footer } from './components/Footer';
 import { Sparkles, ArrowRight, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
 
+// Helper to parse pathname and hash into exact route state
+export function parseRoute(pathname: string, rawHash: string) {
+  // 301 Permanent Redirect emulation for /old-home -> /
+  if (pathname === '/old-home' || rawHash === '#old-home' || rawHash === 'old-home') {
+    return { view: 'home' as const, article: null, category: 'All' as const, redirect: '/' };
+  }
+
+  const hash = rawHash.replace('#', '').trim();
+
+  // Friendly 484 / 404
+  if (pathname === '/484' || pathname === '/404' || hash === '484' || hash === '404') {
+    return { view: '484' as const, article: null, category: 'All' as const };
+  }
+
+  // Article path (e.g. /article/beginners-guide-to-building-a-skincare-routine)
+  if (pathname.startsWith('/article/')) {
+    const slug = pathname.replace(/^\/article\//, '').replace(/\/$/, '');
+    const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
+    if (found) {
+      return { view: 'article' as const, article: found, category: found.category };
+    }
+    return { view: '484' as const, article: null, category: 'All' as const };
+  }
+
+  // Category path (e.g. /category/Skincare)
+  if (pathname.startsWith('/category/')) {
+    const rawCat = pathname.replace(/^\/category\//, '').replace(/\/$/, '');
+    const cat = decodeURIComponent(rawCat) as CategoryType | 'All';
+    const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
+    if (exists) {
+      return { view: (cat === 'All' ? 'home' : 'category') as const, article: null, category: cat };
+    }
+    return { view: '484' as const, article: null, category: 'All' as const };
+  }
+
+  // About path (/about)
+  if (pathname === '/about') {
+    return { view: 'about' as const, article: null, category: 'All' as const };
+  }
+
+  // Saved path (/saved)
+  if (pathname === '/saved') {
+    return { view: 'saved' as const, article: null, category: 'All' as const };
+  }
+
+  // Root or empty path (/)
+  if (pathname === '/' || pathname === '') {
+    // Backwards compatibility with legacy hash routes if navigated from external bookmarks
+    if (hash.startsWith('article/')) {
+      const slug = hash.replace('article/', '').trim();
+      const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
+      if (found) {
+        return { view: 'article' as const, article: found, category: found.category, cleanPath: `/article/${found.slug}` };
+      }
+      return { view: '484' as const, article: null, category: 'All' as const };
+    }
+    if (hash.startsWith('category/')) {
+      const cat = decodeURIComponent(hash.replace('category/', '')) as CategoryType | 'All';
+      const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
+      if (exists) {
+        return { view: (cat === 'All' ? 'home' : 'category') as const, article: null, category: cat, cleanPath: cat === 'All' ? '/' : `/category/${encodeURIComponent(cat)}` };
+      }
+      return { view: '484' as const, article: null, category: 'All' as const };
+    }
+    if (hash === 'about') {
+      return { view: 'about' as const, article: null, category: 'All' as const, cleanPath: '/about' };
+    }
+    if (hash === 'saved') {
+      return { view: 'saved' as const, article: null, category: 'All' as const, cleanPath: '/saved' };
+    }
+    if (!hash || hash === 'home') {
+      return { view: 'home' as const, article: null, category: 'All' as const };
+    }
+    return { view: '484' as const, article: null, category: 'All' as const };
+  }
+
+  // Any unrecognized route renders friendly 484 page
+  return { view: '484' as const, article: null, category: 'All' as const };
+}
+
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'article' | 'category' | 'about' | 'saved' | '484'>('home');
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [activeCategory, setActiveCategory] = useState<CategoryType | 'All'>('All');
+  const initialRoute = typeof window !== 'undefined'
+    ? parseRoute(window.location.pathname, window.location.hash)
+    : { view: 'home' as const, article: null, category: 'All' as const };
+
+  const [currentView, setCurrentView] = useState<'home' | 'article' | 'category' | 'about' | 'saved' | '484'>(initialRoute.view);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(initialRoute.article);
+  const [activeCategory, setActiveCategory] = useState<CategoryType | 'All'>(initialRoute.category);
   const [savedArticleIds, setSavedArticleIds] = useState<string[]>(() => {
     try {
       const stored = localStorage.getItem('glow_edit_saved_articles');
@@ -47,106 +131,25 @@ export default function App() {
 
   // Handle URL hash and pathname changes for deep linking, 301 redirects, and browser back/forward
   useEffect(() => {
+    // Handle any initial redirect or cleanPath rewrite
+    if (initialRoute.redirect) {
+      window.history.replaceState(null, '', initialRoute.redirect);
+    } else if ('cleanPath' in initialRoute && initialRoute.cleanPath) {
+      window.history.replaceState(null, '', initialRoute.cleanPath);
+    }
+
     const handleLocationChange = () => {
-      // 301 Permanent Redirect emulation for /old-home -> /
-      if (window.location.pathname === '/old-home' || window.location.hash === '#old-home') {
-        window.history.replaceState(null, '', '/');
-        setCurrentView('home');
-        setSelectedArticle(null);
-        setActiveCategory('All');
-        return;
+      const route = parseRoute(window.location.pathname, window.location.hash);
+      if (route.redirect) {
+        window.history.replaceState(null, '', route.redirect);
+      } else if ('cleanPath' in route && route.cleanPath) {
+        window.history.replaceState(null, '', route.cleanPath);
       }
-
-      const hash = window.location.hash.replace('#', '').trim();
-      const pathname = window.location.pathname;
-
-      // Friendly 484 / 404 page routing
-      if (hash === '484' || hash === '404' || pathname === '/484' || pathname === '/404') {
-        setCurrentView('484');
-        setSelectedArticle(null);
-        return;
-      }
-
-      if (!hash || hash === 'home' || (pathname === '/' && !hash)) {
-        setCurrentView('home');
-        setSelectedArticle(null);
-        setActiveCategory('All');
-        return;
-      }
-
-      if (hash.startsWith('article/')) {
-        const slug = hash.replace('article/', '');
-        const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
-        if (found) {
-          setSelectedArticle(found);
-          setCurrentView('article');
-        } else {
-          // If article not found, show friendly custom 484 page
-          setCurrentView('484');
-          setSelectedArticle(null);
-        }
-        return;
-      }
-
-      if (pathname.startsWith('/article/')) {
-        const slug = pathname.replace('/article/', '');
-        const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
-        if (found) {
-          setSelectedArticle(found);
-          setCurrentView('article');
-        } else {
-          setCurrentView('484');
-          setSelectedArticle(null);
-        }
-        return;
-      }
-
-      if (hash.startsWith('category/')) {
-        const cat = decodeURIComponent(hash.replace('category/', '')) as CategoryType | 'All';
-        const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
-        if (exists) {
-          setActiveCategory(cat);
-          setCurrentView('category');
-          setSelectedArticle(null);
-        } else {
-          setCurrentView('484');
-          setSelectedArticle(null);
-        }
-        return;
-      }
-
-      if (pathname.startsWith('/category/')) {
-        const cat = decodeURIComponent(pathname.replace('/category/', '')) as CategoryType | 'All';
-        const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
-        if (exists) {
-          setActiveCategory(cat);
-          setCurrentView('category');
-          setSelectedArticle(null);
-        } else {
-          setCurrentView('484');
-          setSelectedArticle(null);
-        }
-        return;
-      }
-
-      if (hash === 'about' || pathname === '/about') {
-        setCurrentView('about');
-        setSelectedArticle(null);
-        return;
-      }
-
-      if (hash === 'saved' || pathname === '/saved') {
-        setCurrentView('saved');
-        setSelectedArticle(null);
-        return;
-      }
-
-      // Any unrecognized route renders friendly 484 page
-      setCurrentView('484');
-      setSelectedArticle(null);
+      setCurrentView(route.view);
+      setSelectedArticle(route.article);
+      setActiveCategory(route.category);
     };
 
-    handleLocationChange();
     window.addEventListener('hashchange', handleLocationChange);
     window.addEventListener('popstate', handleLocationChange);
     return () => {
@@ -220,13 +223,31 @@ export default function App() {
       canonicalPath = '/484';
     }
 
-    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
-    if (!canonical) {
+    const canonicalUrl = `${liveBase}${canonicalPath}`;
+
+    // Manage canonical tag: update primary and eliminate any duplicates to strictly satisfy Requirement 5
+    const canonicalLinks = document.querySelectorAll('link[rel="canonical"]');
+    let canonical: HTMLLinkElement;
+    if (canonicalLinks.length > 0) {
+      canonical = canonicalLinks[0] as HTMLLinkElement;
+      for (let i = 1; i < canonicalLinks.length; i++) {
+        canonicalLinks[i].parentNode?.removeChild(canonicalLinks[i]);
+      }
+    } else {
       canonical = document.createElement('link');
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = `${liveBase}${canonicalPath}`;
+    canonical.setAttribute('href', canonicalUrl);
+
+    // Keep og:url in sync with canonical
+    let ogUrl = document.querySelector('meta[property="og:url"]');
+    if (!ogUrl) {
+      ogUrl = document.createElement('meta');
+      ogUrl.setAttribute('property', 'og:url');
+      document.head.appendChild(ogUrl);
+    }
+    ogUrl.setAttribute('content', canonicalUrl);
 
     // Update JSON-LD structured data dynamically for search engine bots
     let schemaScript = document.getElementById('json-ld-schema') as HTMLScriptElement | null;
@@ -267,7 +288,7 @@ export default function App() {
         '@type': 'Blog',
         'name': 'The Glow Edit',
         'description': description,
-        'url': `${liveBase}${canonicalPath}`,
+        'url': canonicalUrl,
         'publisher': {
           '@type': 'Organization',
           'name': 'The Glow Edit',
@@ -285,29 +306,25 @@ export default function App() {
   const navigateTo = (view: string, category?: CategoryType | 'All') => {
     if (view === 'home') {
       window.history.pushState(null, '', '/');
-      window.location.hash = 'home';
       setCurrentView('home');
       setSelectedArticle(null);
       setActiveCategory('All');
     } else if (view === 'category' && category) {
-      window.history.pushState(null, '', `/category/${encodeURIComponent(category)}`);
-      window.location.hash = `category/${encodeURIComponent(category)}`;
+      const targetPath = category === 'All' ? '/' : `/category/${encodeURIComponent(category)}`;
+      window.history.pushState(null, '', targetPath);
       setActiveCategory(category);
-      setCurrentView('category');
+      setCurrentView(category === 'All' ? 'home' : 'category');
       setSelectedArticle(null);
     } else if (view === 'about') {
       window.history.pushState(null, '', '/about');
-      window.location.hash = 'about';
       setCurrentView('about');
       setSelectedArticle(null);
     } else if (view === 'saved') {
       window.history.pushState(null, '', '/saved');
-      window.location.hash = 'saved';
       setCurrentView('saved');
       setSelectedArticle(null);
     } else if (view === '484' || view === '404') {
       window.history.pushState(null, '', '/484');
-      window.location.hash = '484';
       setCurrentView('484');
       setSelectedArticle(null);
     }
@@ -318,7 +335,6 @@ export default function App() {
     setSelectedArticle(article);
     setCurrentView('article');
     window.history.pushState(null, '', `/article/${article.slug}`);
-    window.location.hash = `article/${article.slug}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -420,13 +436,10 @@ export default function App() {
           <CategoryFilterBar
             activeCategory={activeCategory}
             onSelectCategory={(cat) => {
-              setActiveCategory(cat);
               if (cat === 'All') {
-                window.location.hash = 'home';
-                setCurrentView('home');
+                navigateTo('home');
               } else {
-                window.location.hash = `category/${encodeURIComponent(cat)}`;
-                setCurrentView('category');
+                navigateTo('category', cat);
               }
             }}
           />
@@ -444,11 +457,9 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => {
-                    setActiveCategory('All');
-                    setCurrentView('home');
-                    window.location.hash = 'home';
+                    navigateTo('home');
                   }}
-                  className="text-xs text-neutral-500 hover:text-neutral-900 transition-colors"
+                  className="text-xs text-neutral-500 hover:text-neutral-900 transition-colors cursor-pointer"
                 >
                   View All Topics
                 </button>

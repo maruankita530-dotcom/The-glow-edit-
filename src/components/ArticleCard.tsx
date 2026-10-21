@@ -151,7 +151,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         </div>
 
         <a
-          href={`#article/${article.slug}`}
+          href={`/article/${article.slug}`}
           onClick={handleClick}
           className="inline-flex items-center gap-1 font-medium text-neutral-900 group-hover:text-[#943855] transition-colors cursor-pointer"
         >

@@ -112,7 +112,7 @@ export const Hero: React.FC<HeroProps> = ({
           {/* Right Column: Hero Visual Asset */}
           <div className="lg:col-span-7">
             <a
-              href={`#article/${featuredArticle.slug}`}
+              href={`/article/${featuredArticle.slug}`}
               onClick={(e) => {
                 if (!e.metaKey && !e.ctrlKey) {
                   e.preventDefault();
