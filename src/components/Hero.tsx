@@ -18,11 +18,28 @@ export const Hero: React.FC<HeroProps> = ({
     <section className="relative border-b border-black/[0.06] bg-[#FAF8F5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 lg:py-14">
         
-        {/* Editorial Eyebrow & Kicker */}
-        <div className="flex items-center justify-between border-b border-black/[0.06] pb-3 mb-8 text-xs uppercase tracking-widest text-neutral-500 font-medium">
-          <span>The Beauty &amp; Skincare Journal · Issue 14</span>
-          <span className="hidden sm:inline">Fall / Winter 2026 Collection</span>
+        {/* Editorial Eyebrow & Brand Masthead */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-black/[0.06] pb-3 mb-6 text-xs uppercase tracking-widest text-neutral-500 font-medium gap-2">
+          <div className="flex items-center gap-2">
+            <span className="text-[#943855] font-semibold">The Glow Edit</span>
+            <span aria-hidden="true">·</span>
+            <span>Issue 14 · Fall / Winter 2026 Collection</span>
+          </div>
+          <span className="hidden sm:inline text-neutral-400">Curated Evidence-Based Skincare</span>
         </div>
+
+        {/* Clear, Descriptive Homepage H1 with Main Keyword & Related Keywords */}
+        <header className="mb-10 text-center max-w-3xl mx-auto">
+          <p className="text-xs uppercase tracking-[0.22em] text-[#943855] font-semibold mb-2">
+            Evidence-Based Cosmetic Science
+          </p>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-neutral-900 tracking-tight leading-[1.14]">
+            The Glow Edit: A Modern Skincare Blog
+          </h1>
+          <p className="text-sm sm:text-base text-neutral-600 mt-3 font-sans max-w-2xl mx-auto font-light leading-relaxed">
+            Welcome to our curated skincare blog website—an honest beauty journal packed with science-backed routines, ingredient guides, and expert advice trusted by readers exploring top skincare blogs in India and beyond.
+          </p>
+        </header>
 
         {/* 2-Column Balanced Editorial Split Hero */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-stretch">
@@ -36,9 +53,9 @@ export const Hero: React.FC<HeroProps> = ({
                 <span className="text-neutral-500">{featuredArticle.readTime}</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium tracking-tight text-neutral-900 leading-[1.12] mb-5 text-balance">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif font-medium tracking-tight text-neutral-900 leading-[1.15] mb-5 text-balance">
                 <a
-                  href={`#article/${featuredArticle.slug}`}
+                  href={`/article/${featuredArticle.slug}`}
                   onClick={(e) => {
                     if (!e.metaKey && !e.ctrlKey) {
                       e.preventDefault();
@@ -49,7 +66,7 @@ export const Hero: React.FC<HeroProps> = ({
                 >
                   {featuredArticle.title}
                 </a>
-              </h1>
+              </h2>
 
               <p className="text-base text-neutral-600 leading-relaxed mb-6 font-sans">
                 {featuredArticle.subtitle}
@@ -69,7 +86,7 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Hero CTAs */}
             <div className="flex flex-wrap items-center gap-3">
               <a
-                href={`#article/${featuredArticle.slug}`}
+                href={`/article/${featuredArticle.slug}`}
                 onClick={(e) => {
                   if (!e.metaKey && !e.ctrlKey) {
                     e.preventDefault();

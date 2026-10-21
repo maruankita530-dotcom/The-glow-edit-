@@ -41,7 +41,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         
         {/* Zone 1: Single Brand Wordmark in Display Serif */}
         <a
-          href="#home"
+          href="/"
           onClick={(e) => {
             e.preventDefault();
             onNavigate('home');
@@ -61,8 +61,8 @@ export const Navbar: React.FC<NavbarProps> = ({
               (link.view === 'category' && activeCategory === link.category && currentView !== 'about');
             
             const href = link.view === 'category'
-              ? `#category/${encodeURIComponent(link.category || '')}`
-              : `#${link.view}`;
+              ? `/category/${encodeURIComponent(link.category || '')}`
+              : link.view === 'home' ? '/' : `/${link.view}`;
 
             return (
               <a
@@ -148,8 +148,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           <nav className="flex flex-col space-y-2">
             {navLinks.map((link) => {
               const href = link.view === 'category'
-                ? `#category/${encodeURIComponent(link.category || '')}`
-                : `#${link.view}`;
+                ? `/category/${encodeURIComponent(link.category || '')}`
+                : link.view === 'home' ? '/' : `/${link.view}`;
               return (
                 <a
                   key={link.label}

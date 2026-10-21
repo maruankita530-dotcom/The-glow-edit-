@@ -31,7 +31,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
     return (
       <article className="group flex items-start gap-4 py-4 border-b border-black/[0.06] hover:bg-black/[0.015] -mx-2 px-2 rounded-lg transition-colors">
         <a
-          href={`#article/${article.slug}`}
+          href={`/article/${article.slug}`}
           onClick={handleClick}
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden shrink-0 border border-black/[0.06] bg-[#F5EFEB] block"
           aria-label={`Read article: ${article.title}`}
@@ -62,7 +62,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             <span>{article.readTime}</span>
           </div>
           <h4 className="font-serif text-base sm:text-lg font-medium text-neutral-900 group-hover:text-[#943855] transition-colors line-clamp-2 leading-snug">
-            <a href={`#article/${article.slug}`} onClick={handleClick}>
+            <a href={`/article/${article.slug}`} onClick={handleClick}>
               {article.title}
             </a>
           </h4>
@@ -78,7 +78,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
         {/* Image Frame */}
         <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F5EFEB]">
           <a
-            href={`#article/${article.slug}`}
+            href={`/article/${article.slug}`}
             onClick={handleClick}
             className="block w-full h-full"
             aria-label={`Read article: ${article.title}`}
@@ -130,7 +130,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
           </div>
 
           <h3 className="font-serif text-xl sm:text-2xl font-medium text-neutral-900 group-hover:text-[#943855] transition-colors leading-snug mb-2.5">
-            <a href={`#article/${article.slug}`} onClick={handleClick}>
+            <a href={`/article/${article.slug}`} onClick={handleClick}>
               {article.title}
             </a>
           </h3>

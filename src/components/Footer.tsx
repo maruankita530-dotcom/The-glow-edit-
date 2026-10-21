@@ -78,7 +78,7 @@ export const Footer: React.FC<FooterProps> = ({
               <ul className="space-y-2">
                 <li>
                   <a
-                    href="#category/Skincare"
+                    href="/category/Skincare"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('category', 'Skincare');
@@ -90,7 +90,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#category/Ingredients"
+                    href="/category/Ingredients"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('category', 'Ingredients');
@@ -102,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#category/Acne%20Care"
+                    href="/category/Acne%20Care"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('category', 'Acne Care');
@@ -114,7 +114,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#category/Product%20Reviews"
+                    href="/category/Product%20Reviews"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('category', 'Product Reviews');
@@ -126,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#category/Student%20Routines"
+                    href="/category/Student%20Routines"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('category', 'Student Routines');
@@ -155,7 +155,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#saved"
+                    href="/saved"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('saved');
@@ -167,7 +167,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#about"
+                    href="/about"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('about');
@@ -179,7 +179,7 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
-                    href="#484"
+                    href="/484"
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate('484');

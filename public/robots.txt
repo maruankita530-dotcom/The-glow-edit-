@@ -3,4 +3,4 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://theglowedit.vercel.app/sitemap.xml
+Sitemap: https://the-glow-edit.vercel.app/sitemap.xml

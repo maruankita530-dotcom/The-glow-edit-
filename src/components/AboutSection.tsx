@@ -21,9 +21,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <Sparkles className="w-3.5 h-3.5" />
             About The Publication
           </div>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-neutral-900 tracking-tight leading-tight">
-            The Glow Edit
-          </h2>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-serif font-medium text-neutral-900 tracking-tight leading-tight">
+            About The Glow Edit: Science-Backed Skincare
+          </h1>
           <p className="mt-4 text-base sm:text-lg text-neutral-600 font-sans font-light leading-relaxed">
             A modern, independent skincare journal dedicated to Gen Z students and young adults. We translate cosmetic chemistry into affordable, gentle, and biologically sound daily routines.
           </p>

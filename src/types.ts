@@ -47,6 +47,9 @@ export interface Article {
   altText: string;
   caption: string;
   summary: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  mainKeyword?: string;
   featured?: boolean;
   trending?: boolean;
   tags: string[];

@@ -155,27 +155,43 @@ export default function App() {
     };
   }, []);
 
-  // Dynamic SEO Page Title, Meta Description, Self-Referencing Canonical Tag & JSON-LD
+  // Dynamic SEO Page Title (50-60 chars), Meta Description (140-160 chars), Self-Referencing Canonical Tag & JSON-LD
   useEffect(() => {
-    let title = 'The Glow Edit - Modern Skincare & Beauty Journal';
-    let description = 'A clean, modern beauty and skincare blog for Gen Z and young adults. Science-backed routines, ingredient guides, acne care, and affordable student skincare.';
+    let title = 'Skincare Blog: Modern Routines & Guides | The Glow Edit';
+    let description = 'The Glow Edit is your trusted skincare blog website. Discover science-backed routines, ingredient guides, and top tips for healthy skin in India & beyond.';
     
     if (currentView === 'article' && selectedArticle) {
-      title = `${selectedArticle.title} | The Glow Edit`;
-      description = selectedArticle.summary;
+      title = selectedArticle.seoTitle || `${selectedArticle.title} | The Glow Edit`;
+      description = selectedArticle.seoDescription || selectedArticle.summary;
     } else if (currentView === 'category') {
-      title = `${activeCategory} Skincare Articles | The Glow Edit`;
-      const catObj = CATEGORIES.find((c) => c.id === activeCategory);
-      if (catObj) description = catObj.description;
+      if (activeCategory === 'Skincare') {
+        title = 'Skincare Articles & Essential Routine Guides | The Glow Edit';
+        description = 'Browse our complete library of evidence-based skincare articles. Master daily routines, barrier repair principles, and healthy skin tips for every budget.';
+      } else if (activeCategory === 'Ingredients') {
+        title = 'Skincare Ingredients Decoded: Actives & Science | Glow Edit';
+        description = 'Deep-dive into cosmetic chemistry with ingredient breakdowns of niacinamide, hyaluronic acid, ceramides, and BHA to elevate your everyday skincare rituals.';
+      } else if (activeCategory === 'Acne Care') {
+        title = 'Acne Care Guides: Clear Blemishes & Pores | The Glow Edit';
+        description = 'Evidence-based acne care articles focused on calming inflammation, unclogging pores with BHA, and healing blemishes without stripping your skin barrier.';
+      } else if (activeCategory === 'Product Reviews') {
+        title = 'Skincare Product Reviews & Honest Breakdowns | The Glow Edit';
+        description = 'Unbiased, cosmetic-chemist reviews of sunscreens, barrier creams, and cleansers to help you make informed skincare investments without marketing hype.';
+      } else if (activeCategory === 'Student Routines') {
+        title = 'Affordable Student Skincare Guides & Hacks | The Glow Edit';
+        description = 'Discover budget-friendly student skincare routines and campus hacks. Get glowing skin with high-performing drugstore cleansers, creams, and daily SPFs.';
+      } else {
+        title = 'Skincare Blog: Modern Routines & Guides | The Glow Edit';
+        description = 'The Glow Edit is your trusted skincare blog website. Discover science-backed routines, ingredient guides, and top tips for healthy skin in India & beyond.';
+      }
     } else if (currentView === 'about') {
-      title = 'About The Glow Edit | Modern Skincare & Beauty Journal';
-      description = 'Our mission, evidence-based cosmetic chemistry standards, and editorial team bios at The Glow Edit.';
+      title = 'About The Glow Edit: Evidence-Based Beauty | The Glow Edit';
+      description = 'Learn about The Glow Edit editorial board and cosmetic chemistry philosophy. Discover our mission to provide transparent, science-first skincare advice.';
     } else if (currentView === 'saved') {
-      title = 'My Saved Reading List | The Glow Edit';
-      description = 'View your saved skincare articles, routines, and ingredient guides.';
+      title = 'My Saved Skincare Reading List & Routines | The Glow Edit';
+      description = 'Access your personal saved reading list of skincare articles, routine guides, and ingredient breakdowns anytime for quick reference and routine planning.';
     } else if (currentView === '484') {
-      title = '484: Page Not Found | The Glow Edit';
-      description = 'The skincare guide or routine page you requested could not be found. Explore our beginner routines, ingredient guides, and acne care solutions.';
+      title = '484: Page Not Found – Explore Skincare | The Glow Edit';
+      description = 'The skincare guide or routine page you requested was not found. Browse our beginner routines, ingredient guides, and acne care solutions to get back on track.';
     }
 
     document.title = title;
@@ -189,14 +205,28 @@ export default function App() {
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', description);
 
-    // Self-referencing canonical tag on every page
+    // Self-referencing canonical tag on every page using live production domain
+    const liveBase = 'https://the-glow-edit.vercel.app';
+    let canonicalPath = '/';
+    if (currentView === 'article' && selectedArticle) {
+      canonicalPath = `/article/${selectedArticle.slug}`;
+    } else if (currentView === 'category') {
+      canonicalPath = `/category/${encodeURIComponent(activeCategory)}`;
+    } else if (currentView === 'about') {
+      canonicalPath = '/about';
+    } else if (currentView === 'saved') {
+      canonicalPath = '/saved';
+    } else if (currentView === '484') {
+      canonicalPath = '/484';
+    }
+
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
       canonical = document.createElement('link');
       canonical.rel = 'canonical';
       document.head.appendChild(canonical);
     }
-    canonical.href = window.location.href;
+    canonical.href = `${liveBase}${canonicalPath}`;
 
     // Update JSON-LD structured data dynamically for search engine bots
     let schemaScript = document.getElementById('json-ld-schema') as HTMLScriptElement | null;
@@ -212,7 +242,7 @@ export default function App() {
         '@context': 'https://schema.org',
         '@type': 'BlogPosting',
         'headline': selectedArticle.title,
-        'description': selectedArticle.summary,
+        'description': selectedArticle.seoDescription || selectedArticle.summary,
         'datePublished': selectedArticle.date,
         'author': {
           '@type': 'Person',
@@ -222,21 +252,26 @@ export default function App() {
         'publisher': {
           '@type': 'Organization',
           'name': 'The Glow Edit',
-          'url': window.location.origin,
+          'url': liveBase,
         },
         'articleSection': selectedArticle.category,
-        'keywords': selectedArticle.tags.join(', ')
+        'keywords': selectedArticle.tags.join(', '),
+        'mainEntityOfPage': {
+          '@type': 'WebPage',
+          '@id': `${liveBase}/article/${selectedArticle.slug}`,
+        },
       });
     } else {
       schemaScript.textContent = JSON.stringify({
         '@context': 'https://schema.org',
         '@type': 'Blog',
         'name': 'The Glow Edit',
-        'description': 'A clean, modern beauty and skincare blog for Gen Z and young adults.',
-        'url': window.location.origin,
+        'description': description,
+        'url': `${liveBase}${canonicalPath}`,
         'publisher': {
           '@type': 'Organization',
-          'name': 'The Glow Edit'
+          'name': 'The Glow Edit',
+          'url': liveBase,
         }
       });
     }
@@ -249,24 +284,29 @@ export default function App() {
 
   const navigateTo = (view: string, category?: CategoryType | 'All') => {
     if (view === 'home') {
+      window.history.pushState(null, '', '/');
       window.location.hash = 'home';
       setCurrentView('home');
       setSelectedArticle(null);
       setActiveCategory('All');
     } else if (view === 'category' && category) {
+      window.history.pushState(null, '', `/category/${encodeURIComponent(category)}`);
       window.location.hash = `category/${encodeURIComponent(category)}`;
       setActiveCategory(category);
       setCurrentView('category');
       setSelectedArticle(null);
     } else if (view === 'about') {
+      window.history.pushState(null, '', '/about');
       window.location.hash = 'about';
       setCurrentView('about');
       setSelectedArticle(null);
     } else if (view === 'saved') {
+      window.history.pushState(null, '', '/saved');
       window.location.hash = 'saved';
       setCurrentView('saved');
       setSelectedArticle(null);
     } else if (view === '484' || view === '404') {
+      window.history.pushState(null, '', '/484');
       window.location.hash = '484';
       setCurrentView('484');
       setSelectedArticle(null);
@@ -277,6 +317,7 @@ export default function App() {
   const handleSelectArticle = (article: Article) => {
     setSelectedArticle(article);
     setCurrentView('article');
+    window.history.pushState(null, '', `/article/${article.slug}`);
     window.location.hash = `article/${article.slug}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -113,6 +113,65 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
     setTimeout(() => setCommentSuccess(false), 4000);
   };
 
+  // Render paragraph text with internal descriptive links
+  const renderParagraphWithLinks = (text: string) => {
+    const parts: (string | React.ReactNode)[] = [];
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let lastIndex = 0;
+    let match: RegExpExecArray | null;
+
+    while ((match = linkRegex.exec(text)) !== null) {
+      if (match.index > lastIndex) {
+        parts.push(text.substring(lastIndex, match.index));
+      }
+      const anchorText = match[1];
+      const targetUrl = match[2];
+
+      parts.push(
+        <a
+          key={match.index}
+          href={targetUrl}
+          onClick={(e) => {
+            if (!e.metaKey && !e.ctrlKey) {
+              e.preventDefault();
+              if (targetUrl.startsWith('/article/')) {
+                const targetSlug = targetUrl.replace('/article/', '');
+                const target = allArticles.find(
+                  (a) => a.slug === targetSlug || a.id === targetSlug
+                );
+                if (target) {
+                  onSelectArticle(target);
+                } else {
+                  window.location.href = targetUrl;
+                }
+              } else if (targetUrl.startsWith('/category/')) {
+                const cat = decodeURIComponent(targetUrl.replace('/category/', '')) as any;
+                if (onNavigateCategory) onNavigateCategory(cat);
+                else window.location.href = targetUrl;
+              } else {
+                window.location.href = targetUrl;
+              }
+            }
+          }}
+          className="text-[#943855] underline decoration-[#943855]/40 hover:decoration-[#943855] hover:text-neutral-900 font-medium transition-colors cursor-pointer"
+        >
+          {anchorText}
+        </a>
+      );
+      lastIndex = linkRegex.lastIndex;
+    }
+
+    if (lastIndex === 0) {
+      return text;
+    }
+
+    if (lastIndex < text.length) {
+      parts.push(text.substring(lastIndex));
+    }
+
+    return parts;
+  };
+
   // Related articles (filter out current article)
   const relatedArticles = allArticles
     .filter((a) => a.id !== article.id && (a.category === article.category || a.tags.some((t) => article.tags.includes(t))))
@@ -317,7 +376,7 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
                         key={pIdx} 
                         className={sIdx === 0 && pIdx === 0 ? 'editorial-drop-cap' : ''}
                       >
-                        {p}
+                        {renderParagraphWithLinks(p)}
                       </p>
                     ))}
                   </div>
@@ -685,7 +744,7 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
             {relatedArticles.map((rel) => (
               <a
                 key={rel.id}
-                href={`#article/${rel.slug}`}
+                href={`/article/${rel.slug}`}
                 onClick={(e) => {
                   if (!e.metaKey && !e.ctrlKey) {
                     e.preventDefault();
