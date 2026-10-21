@@ -35,6 +35,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
             <img
               src={aboutImg}
               alt="The Glow Edit Curated Skincare Studio and Editorial Vanity"
+              width={1200}
+              height={896}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
               referrerPolicy="no-referrer"
             />
@@ -106,6 +110,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <img
                 src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80"
                 alt="Camille Laurent"
+                width={56}
+                height={56}
+                loading="lazy"
+                decoding="async"
                 className="w-14 h-14 rounded-full object-cover shrink-0"
               />
               <div>
@@ -121,6 +129,10 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
               <img
                 src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
                 alt="Dr. Maya Lin"
+                width={56}
+                height={56}
+                loading="lazy"
+                decoding="async"
                 className="w-14 h-14 rounded-full object-cover shrink-0"
               />
               <div>

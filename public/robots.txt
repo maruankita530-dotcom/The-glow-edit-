@@ -1,0 +1,6 @@
+# robots.txt for The Glow Edit
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://theglowedit.vercel.app/sitemap.xml

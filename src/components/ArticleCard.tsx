@@ -44,6 +44,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
             <img
               src={article.image}
               alt={article.altText}
+              width={96}
+              height={96}
+              loading="lazy"
+              decoding="async"
               onError={() => setImageError(true)}
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               referrerPolicy="no-referrer"
@@ -88,6 +92,10 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
               <img
                 src={article.image}
                 alt={article.altText}
+                width={1200}
+                height={896}
+                loading="lazy"
+                decoding="async"
                 onError={() => setImageError(true)}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-104"
                 referrerPolicy="no-referrer"

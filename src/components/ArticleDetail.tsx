@@ -261,6 +261,10 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
               <img
                 src={article.image}
                 alt={article.altText}
+                width={1200}
+                height={896}
+                loading="eager"
+                decoding="async"
                 onError={() => setMainImgError(true)}
                 className="w-full h-full object-cover"
                 referrerPolicy="no-referrer"
@@ -614,6 +618,10 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
                 <img
                   src={article.author.avatar}
                   alt={article.author.name}
+                  width={48}
+                  height={48}
+                  loading="lazy"
+                  decoding="async"
                   className="w-12 h-12 rounded-full object-cover"
                 />
                 <div>
@@ -692,6 +700,10 @@ export const ArticleDetail: React.FC<ArticleDetailProps> = ({
                     <img
                       src={rel.image}
                       alt={rel.altText}
+                      width={1200}
+                      height={896}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover group-hover:scale-104 transition-transform duration-300"
                       referrerPolicy="no-referrer"
                     />

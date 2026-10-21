@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>404: Page Not Found | The Glow Edit</title>
+    <meta name="description" content="Friendly custom 404 error page for The Glow Edit modern skincare journal. Explore our beginner routines, ingredient guides, and acne care solutions." />
+    <link rel="canonical" href="https://theglowedit.vercel.app/404" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        margin: 0;
+        font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+        background-color: #FAF8F5;
+        color: #1a1a1a;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        box-sizing: border-box;
+      }
+      .container {
+        max-width: 760px;
+        width: 100%;
+        text-align: center;
+      }
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.35rem 0.85rem;
+        border-radius: 9999px;
+        background-color: #FCECEF;
+        color: #943855;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 1.5rem;
+      }
+      h1 {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: clamp(3rem, 8vw, 4.5rem);
+        font-weight: 400;
+        margin: 0 0 1rem;
+        color: #171717;
+        letter-spacing: -0.02em;
+      }
+      h1 span {
+        color: #943855;
+        font-style: italic;
+      }
+      p.subtitle {
+        font-size: 1.1rem;
+        color: #525252;
+        max-width: 580px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+      }
+      .btn-primary {
+        display: inline-block;
+        padding: 0.75rem 1.75rem;
+        background-color: #171717;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        transition: background-color 0.2s;
+        margin-bottom: 3rem;
+      }
+      .btn-primary:hover {
+        background-color: #943855;
+      }
+      .links-card {
+        background: #fff;
+        border: 1px solid rgba(0,0,0,0.06);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: left;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+      }
+      .links-header {
+        font-family: 'Cormorant Garamond', Georgia, serif;
+        font-size: 1.35rem;
+        font-weight: 500;
+        margin-top: 0;
+        margin-bottom: 1.25rem;
+        color: #171717;
+        border-bottom: 1px solid rgba(0,0,0,0.06);
+        padding-bottom: 0.75rem;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+      }
+      .nav-card {
+        display: block;
+        padding: 1rem;
+        border-radius: 10px;
+        background: #FAF8F5;
+        border: 1px solid rgba(0,0,0,0.04);
+        text-decoration: none;
+        color: inherit;
+        transition: all 0.2s;
+      }
+      .nav-card:hover {
+        background: #FCECEF;
+        border-color: rgba(148, 56, 85, 0.2);
+        transform: translateY(-1px);
+      }
+      .nav-card strong {
+        display: block;
+        font-size: 0.875rem;
+        color: #171717;
+        margin-bottom: 0.25rem;
+      }
+      .nav-card span {
+        font-size: 0.75rem;
+        color: #737373;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="badge">✨ Error 404 · Routine Interrupted</div>
+      <h1>404 <span>Page Not Found</span></h1>
+      <p class="subtitle">
+        It looks like this page was rinsed off during a double cleanse. Don&apos;t worry—your skin barrier is completely safe! Explore our main sections below to find what you were looking for.
+      </p>
+
+      <a href="/" class="btn-primary">Return to Homepage</a>
+
+      <div class="links-card">
+        <h2 class="links-header">Main Sections &amp; Popular Skincare Guides</h2>
+        <div class="grid">
+          <a href="/#home" class="nav-card">
+            <strong>All 10 Articles</strong>
+            <span>Complete archive of evidence-based skincare tutorials.</span>
+          </a>
+          <a href="/#category/Skincare" class="nav-card">
+            <strong>Beginner Skincare</strong>
+            <span>3-step essential routine, product order &amp; barrier care.</span>
+          </a>
+          <a href="/#category/Ingredients" class="nav-card">
+            <strong>Ingredients Guide</strong>
+            <span>Niacinamide, BHA Salicylic Acid &amp; Hyaluronic Acid.</span>
+          </a>
+          <a href="/#category/Acne%20Care" class="nav-card">
+            <strong>Acne Care Protocols</strong>
+            <span>Calm breakouts and blackheads without irritation.</span>
+          </a>
+          <a href="/#category/Product%20Reviews" class="nav-card">
+            <strong>Product Reviews</strong>
+            <span>Sunscreens and daily moisturisers for all skin types.</span>
+          </a>
+          <a href="/#category/Student%20Routines" class="nav-card">
+            <strong>Student Routines</strong>
+            <span>Affordable, high-performing skincare under $30.</span>
+          </a>
+          <a href="/#about" class="nav-card">
+            <strong>About The Glow Edit</strong>
+            <span>Meet our cosmetic chemistry and editorial contributors.</span>
+          </a>
+          <a href="/#saved" class="nav-card">
+            <strong>Saved Reading List</strong>
+            <span>Access your bookmarked skincare guides.</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

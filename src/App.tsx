@@ -15,11 +15,12 @@ import { SearchModal } from './components/SearchModal';
 import { RoutineBuilderModal } from './components/RoutineBuilderModal';
 import { AboutSection } from './components/AboutSection';
 import { SavedArticlesView } from './components/SavedArticlesView';
+import { NotFoundPage } from './components/NotFoundPage';
 import { Footer } from './components/Footer';
 import { Sparkles, ArrowRight, BookOpen, Layers, CheckCircle2 } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'article' | 'category' | 'about' | 'saved'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'article' | 'category' | 'about' | 'saved' | '484'>('home');
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
   const [activeCategory, setActiveCategory] = useState<CategoryType | 'All'>('All');
   const [savedArticleIds, setSavedArticleIds] = useState<string[]>(() => {
@@ -44,41 +45,117 @@ export default function App() {
     }
   }, [savedArticleIds]);
 
-  // Handle URL hash changes for deep linking and browser back/forward
+  // Handle URL hash and pathname changes for deep linking, 301 redirects, and browser back/forward
   useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (!hash || hash === 'home') {
+    const handleLocationChange = () => {
+      // 301 Permanent Redirect emulation for /old-home -> /
+      if (window.location.pathname === '/old-home' || window.location.hash === '#old-home') {
+        window.history.replaceState(null, '', '/');
         setCurrentView('home');
         setSelectedArticle(null);
         setActiveCategory('All');
-      } else if (hash.startsWith('article/')) {
+        return;
+      }
+
+      const hash = window.location.hash.replace('#', '').trim();
+      const pathname = window.location.pathname;
+
+      // Friendly 484 / 404 page routing
+      if (hash === '484' || hash === '404' || pathname === '/484' || pathname === '/404') {
+        setCurrentView('484');
+        setSelectedArticle(null);
+        return;
+      }
+
+      if (!hash || hash === 'home' || (pathname === '/' && !hash)) {
+        setCurrentView('home');
+        setSelectedArticle(null);
+        setActiveCategory('All');
+        return;
+      }
+
+      if (hash.startsWith('article/')) {
         const slug = hash.replace('article/', '');
         const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
         if (found) {
           setSelectedArticle(found);
           setCurrentView('article');
+        } else {
+          // If article not found, show friendly custom 484 page
+          setCurrentView('484');
+          setSelectedArticle(null);
         }
-      } else if (hash.startsWith('category/')) {
+        return;
+      }
+
+      if (pathname.startsWith('/article/')) {
+        const slug = pathname.replace('/article/', '');
+        const found = ARTICLES.find((a) => a.slug === slug || a.id === slug);
+        if (found) {
+          setSelectedArticle(found);
+          setCurrentView('article');
+        } else {
+          setCurrentView('484');
+          setSelectedArticle(null);
+        }
+        return;
+      }
+
+      if (hash.startsWith('category/')) {
         const cat = decodeURIComponent(hash.replace('category/', '')) as CategoryType | 'All';
-        setActiveCategory(cat);
-        setCurrentView('category');
-        setSelectedArticle(null);
-      } else if (hash === 'about') {
+        const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
+        if (exists) {
+          setActiveCategory(cat);
+          setCurrentView('category');
+          setSelectedArticle(null);
+        } else {
+          setCurrentView('484');
+          setSelectedArticle(null);
+        }
+        return;
+      }
+
+      if (pathname.startsWith('/category/')) {
+        const cat = decodeURIComponent(pathname.replace('/category/', '')) as CategoryType | 'All';
+        const exists = CATEGORIES.some((c) => c.id === cat) || cat === 'All';
+        if (exists) {
+          setActiveCategory(cat);
+          setCurrentView('category');
+          setSelectedArticle(null);
+        } else {
+          setCurrentView('484');
+          setSelectedArticle(null);
+        }
+        return;
+      }
+
+      if (hash === 'about' || pathname === '/about') {
         setCurrentView('about');
         setSelectedArticle(null);
-      } else if (hash === 'saved') {
+        return;
+      }
+
+      if (hash === 'saved' || pathname === '/saved') {
         setCurrentView('saved');
         setSelectedArticle(null);
+        return;
       }
+
+      // Any unrecognized route renders friendly 484 page
+      setCurrentView('484');
+      setSelectedArticle(null);
     };
 
-    handleHashChange();
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
+    handleLocationChange();
+    window.addEventListener('hashchange', handleLocationChange);
+    window.addEventListener('popstate', handleLocationChange);
+    return () => {
+      window.removeEventListener('hashchange', handleLocationChange);
+      window.removeEventListener('popstate', handleLocationChange);
+    };
   }, []);
 
-  // Dynamic SEO Page Title, Meta Description & JSON-LD Structured Data
+  // Dynamic SEO Page Title, Meta Description, Self-Referencing Canonical Tag & JSON-LD
   useEffect(() => {
     let title = 'The Glow Edit - Modern Skincare & Beauty Journal';
     let description = 'A clean, modern beauty and skincare blog for Gen Z and young adults. Science-backed routines, ingredient guides, acne care, and affordable student skincare.';
@@ -96,6 +173,9 @@ export default function App() {
     } else if (currentView === 'saved') {
       title = 'My Saved Reading List | The Glow Edit';
       description = 'View your saved skincare articles, routines, and ingredient guides.';
+    } else if (currentView === '484') {
+      title = '484: Page Not Found | The Glow Edit';
+      description = 'The skincare guide or routine page you requested could not be found. Explore our beginner routines, ingredient guides, and acne care solutions.';
     }
 
     document.title = title;
@@ -109,7 +189,7 @@ export default function App() {
     const ogDesc = document.querySelector('meta[property="og:description"]');
     if (ogDesc) ogDesc.setAttribute('content', description);
 
-    // Update canonical link
+    // Self-referencing canonical tag on every page
     let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
     if (!canonical) {
       canonical = document.createElement('link');
@@ -185,6 +265,10 @@ export default function App() {
     } else if (view === 'saved') {
       window.location.hash = 'saved';
       setCurrentView('saved');
+      setSelectedArticle(null);
+    } else if (view === '484' || view === '404') {
+      window.location.hash = '484';
+      setCurrentView('484');
       setSelectedArticle(null);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -269,6 +353,15 @@ export default function App() {
         <AboutSection
           onOpenRoutineBuilder={() => setIsRoutineBuilderOpen(true)}
           onExploreArticles={() => navigateTo('home')}
+        />
+      ) : currentView === '484' ? (
+        <NotFoundPage
+          onNavigateHome={() => navigateTo('home')}
+          onNavigateCategory={(cat) => navigateTo('category', cat)}
+          onNavigateAbout={() => navigateTo('about')}
+          onNavigateSaved={() => navigateTo('saved')}
+          onOpenSearch={() => setIsSearchOpen(true)}
+          onOpenRoutineBuilder={() => setIsRoutineBuilderOpen(true)}
         />
       ) : (
         /* Home & Category Listing Views */

@@ -179,6 +179,18 @@ export const Footer: React.FC<FooterProps> = ({
                 </li>
                 <li>
                   <a
+                    href="#484"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate('484');
+                    }}
+                    className="hover:text-white transition-colors cursor-pointer block text-neutral-400"
+                  >
+                    484 / Help Guide
+                  </a>
+                </li>
+                <li>
+                  <a
                     href="#about"
                     onClick={(e) => {
                       e.preventDefault();

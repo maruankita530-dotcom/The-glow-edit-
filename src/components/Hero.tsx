@@ -108,6 +108,10 @@ export const Hero: React.FC<HeroProps> = ({
               <img
                 src={heroImg}
                 alt="The Glow Edit Skincare Essentials and Editorial Magazine"
+                width={1376}
+                height={768}
+                loading="eager"
+                decoding="async"
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-103"
                 referrerPolicy="no-referrer"
               />

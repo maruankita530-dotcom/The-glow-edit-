@@ -107,6 +107,10 @@ export const SearchModal: React.FC<SearchModalProps> = ({
                   <img
                     src={article.image}
                     alt={article.altText}
+                    width={64}
+                    height={64}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                     referrerPolicy="no-referrer"
                   />
